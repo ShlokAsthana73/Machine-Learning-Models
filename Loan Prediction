@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+def load_data(path):
+    return pd.read_csv(path)
+
+def preprocess_data(df):
+    df = df.copy()
+    # Handle missing values
+    df.fillna(method='ffill', inplace=True)
+
+    # Convert categorical variables to numeric
+    le = LabelEncoder()
+    for column in df.select_dtypes(include=['object']).columns:
+        df[column] = le.fit_transform(df[column])
+    return df
+
+def train_model(X_train, y_train):
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    return model
+
+def main():
+    df = load_data("data/loan_data.csv")
+    df = preprocess_data(df)
+
+    X = df.drop("Loan_Status", axis=1)
+    y = df["Loan_Status"]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    model = train_model(X_train, y_train)
+
+    # Evaluate
+    y_pred = model.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("Classification Report:\n", classification_report(y_test, y_pred))
+
+    # Save model
+    with open("model.pkl", "wb") as f:
+        pickle.dump(model, f)
+
+if __name__ == "__main__":
+    main()
