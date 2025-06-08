@@ -1,0 +1,35 @@
+# Import libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Sample data
+# X = hours studied, y = marks scored
+X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
+y = np.array([5, 7, 9, 11, 13, 15, 17, 19, 21, 23])
+
+# Split into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create linear regression model
+model = LinearRegression()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Predict on test set
+y_pred = model.predict(X_test)
+
+# Print model parameters
+print("Slope (coefficient):", model.coef_[0])
+print("Intercept:", model.intercept_)
+
+# Plot
+plt.scatter(X, y, color='blue', label='Actual data')
+plt.plot(X, model.predict(X), color='red', label='Regression line')
+plt.xlabel('Hours Studied')
+plt.ylabel('Marks Scored')
+plt.title('Linear Regression Example')
+plt.legend()
+plt.show()
