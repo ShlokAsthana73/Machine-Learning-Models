@@ -1,0 +1,40 @@
+# Import libraries
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Iris dataset
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Initialize the SVM classifier
+model = SVC(kernel='linear', C=1.0, random_state=42)
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Evaluation
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# Optional: Visualize with a heatmap
+sns.heatmap(
+    confusion_matrix := accuracy_score(y_test, y_pred),
+    annot=True,
+    cmap="Blues",
+    fmt="g"
+)
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
